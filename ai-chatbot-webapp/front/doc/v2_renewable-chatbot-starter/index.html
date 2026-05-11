@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Renova Lite | Energías renovables</title>
+  <meta name="description" content="Interfaz clara y ligera sobre energías renovables con chatbot local y conexión opcional a API." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <div class="brand">Renova <span>Lite</span></div>
+      <nav class="nav">
+        <a href="#fuentes">Fuentes</a>
+        <a href="#porque">¿Por qué?</a>
+        <a href="#creditos">Créditos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Energías renovables, explicado fácil</h1>
+
+      <div class="chips">
+        <span class="chip">☀️ Solar</span>
+        <span class="chip">🌬️ Eólica</span>
+        <span class="chip">💧 Hidro</span>
+      </div>
+    </section>
+
+    <section id="fuentes" class="grid">
+      <article class="card">
+        <img
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Solar%20panels,%20Santorini2.jpg"
+          alt="Paneles solares en un techo"
+          loading="lazy"
+        />
+        <div class="card-body">
+          <h2>Solar</h2>
+          <p>Convierte la luz del sol en electricidad (fotovoltaica) o calor (térmica).</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <img
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Wind_turbines.jpg"
+          alt="Turbinas eólicas contra el cielo"
+          loading="lazy"
+        />
+        <div class="card-body">
+          <h2>Eólica</h2>
+          <p>Usa el viento para mover turbinas y generar electricidad de forma limpia.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <img
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Itaipu%20Dam.jpg"
+          alt="Presa hidroeléctrica (Itaipu)"
+          loading="lazy"
+        />
+        <div class="card-body">
+          <h2>Hidroeléctrica</h2>
+          <p>Aprovecha el agua en movimiento (río/presa) para generar energía.</p>
+        </div>
+      </article>
+    </section>
+
+    <section id="porque" class="panel">
+      <h2>¿Por qué importan?</h2>
+      <ul>
+        <li>Reducen emisiones y contaminación del aire.</li>
+        <li>Disminuyen la dependencia de combustibles fósiles.</li>
+        <li>Crean empleos en instalación y mantenimiento.</li>
+      </ul>
+      <p class="hint">
+        Tip: abre el chatbot (botón abajo a la derecha) y pregunta:
+        <em>“¿qué es la energía solar?”</em>, <em>“beneficios”</em>, <em>“eólica”</em>.
+      </p>
+    </section>
+
+    <footer id="creditos" class="footer">
+      <h2>Créditos de imágenes</h2>
+      <p>Imágenes de Wikimedia Commons (uso libre según sus licencias):</p>
+      <ul class="credits">
+        <li><strong>Solar panels, Santorini2.jpg</strong> — Autor: 23x2 — Licencia: CC BY-SA 3.0</li>
+        <li><strong>Wind turbines.jpg</strong> — Autor: London Rachel, U.S. Fish and Wildlife Service — Dominio público</li>
+        <li><strong>Itaipu Dam.jpg</strong> — Licencia: CC BY-SA 2.0</li>
+      </ul>
+    </footer>
+  </main>
+
+  <!-- Chatbot -->
+  <button id="chatFab" class="chat-fab" aria-label="Abrir chatbot" title="Chatbot">🤖</button>
+
+  <section id="chatWindow" class="chat" hidden aria-label="Chatbot">
+    <header class="chat-top">
+      <div class="chat-title"> 🤖 EcoBot</div>
+
+      <label class="chat-mode">
+        Modo
+        <select id="chatMode" aria-label="Modo del chatbot">
+          
+          <option value="local" selected>Local</option>
+          <option value="api">API</option>
+        </select>
+      </label>
+
+      <button id="chatClose" class="chat-x" aria-label="Cerrar">✕</button>
+    </header>
+
+    <div id="chatBody" class="chat-body" role="log" aria-live="polite"></div>
+
+    <form id="chatForm" class="chat-form" autocomplete="off">
+      <input id="chatInput" type="text" placeholder="Escribe tu pregunta…" required />
+      <button type="submit">Enviar</button>
+    </form>
+
+    <div class="chat-note">
+      En modo <strong>API</strong>, el mensaje se envía al endpoint definido en <code>app.js</code>.
+    </div>
+  </section>
+
+  <script src="./app.js"></script>
+</body>
+</html>

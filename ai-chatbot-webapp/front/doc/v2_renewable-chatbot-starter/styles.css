@@ -1,0 +1,348 @@
+/* Renova Lite - Estilos claros y ligeros (sin frameworks) */
+:root {
+  --bg: #f7f8fb;
+  --card: #fff;
+  --text: #0f172a;
+  --muted: #475569;
+  --border: #e2e8f0;
+  --shadow: 0 12px 28px rgba(2, 6, 23, .10);
+  --primary: #2563eb;
+  --radius: 16px;
+  --max: 980px;
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box
+}
+
+html,
+body {
+  height: 100%
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text)
+}
+
+.wrap {
+  width: min(100% - 32px, var(--max));
+  margin: 0 auto
+}
+
+/* Barra superior */
+.topbar {
+  position: sticky;
+  top: 0;
+  background: rgba(247, 248, 251, .90);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10
+}
+
+.topbar .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  gap: 14px
+}
+
+.brand {
+  font-weight: 900
+}
+
+.brand span {
+  font-weight: 700;
+  color: var(--muted)
+}
+
+.nav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 700
+}
+
+.nav a:hover {
+  color: var(--text)
+}
+
+/* Hero */
+.hero {
+  padding: 26px 0 10px
+}
+
+.hero h1 {
+  margin: 12px 0 8px;
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem)
+}
+
+.hero p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  line-height: 1.6
+}
+
+.chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap
+}
+
+.chip {
+  background: #eef2ff;
+  border: 1px solid #dbeafe;
+  color: #1e3a8a;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: .9rem
+}
+
+/* Tarjetas */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 14px 0 20px
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block
+}
+
+.card-body {
+  padding: 12px 12px 14px
+}
+
+.card h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55
+}
+
+/* Panel */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px
+}
+
+.panel h2 {
+  margin: 0 0 8px
+}
+
+.panel ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.75
+}
+
+.hint {
+  margin: 10px 0 0;
+  color: var(--muted)
+}
+
+/* Footer */
+.footer {
+  padding: 10px 0 40px
+}
+
+.footer h2 {
+  margin: 0 0 6px
+}
+
+.footer p {
+  margin: 0 0 10px;
+  color: var(--muted)
+}
+
+.credits {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.65
+}
+
+/* ===================== Chatbot (lite) ===================== */
+.chat-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: white;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 50;
+}
+
+.chat {
+  position: fixed;
+  right: 18px;
+  bottom: 82px;
+  width: min(92vw, 360px);
+  height: 460px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  z-index: 50;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+}
+
+/* ícono del chatbot */
+.chat[hidden] {
+  display: none !important
+}
+
+.chat-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid var(--border)
+}
+
+.chat-title {
+  font-weight: 900
+}
+
+.chat-mode {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: .9rem
+}
+
+.chat-mode select {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 8px;
+  background: white
+}
+
+.chat-x {
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer
+}
+
+.chat-body {
+  padding: 10px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px
+}
+
+.msg {
+  max-width: 85%;
+  border-radius: 14px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  line-height: 1.45;
+  font-size: .95rem
+}
+
+.msg.user {
+  margin-left: auto;
+  background: #eff6ff
+}
+
+.msg.bot {
+  margin-right: auto;
+  background: #f8fafc
+}
+
+.chat-form {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-top: 1px solid var(--border)
+}
+
+.chat-form input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  outline: none
+}
+
+.chat-form input:focus {
+  border-color: #93c5fd
+}
+
+.chat-form button {
+  border: 1px solid #bfdbfe;
+  background: #2563eb;
+  color: white;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 800
+}
+
+.chat-note {
+  padding: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .85rem
+}
+
+.chat-note code {
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border)
+}
+
+@media (max-width:900px) {
+  .grid {
+    grid-template-columns: 1fr
+  }
+
+  .card img {
+    height: 200px
+  }
+}
