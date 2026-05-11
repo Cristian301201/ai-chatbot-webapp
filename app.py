@@ -3,24 +3,38 @@ from flask_cors import CORS
 from groq import Groq
 import os
 from dotenv import load_dotenv
+from database import init_db, guardar_cliente
+import re
+from database import obtener_leads # Asegúrate de importar la nueva función
 
 load_dotenv()
 
 
 app = Flask(__name__)
+init_db() # Crea el archivo ducati_leads.db automáticamente al iniciar
 CORS(app) # Permite que tu HTML se comunique con Python
 
 # Configura tu API Key de Groq aquí
-client = Groq(api_key= os.getenv ("GROQ_API_KEY"))
+client = Groq(api_key= os.getenv("GROQ_API_KEY"))
 
 # Diccionario para almacenar el historial de conversaciones
 # En un entorno real, usarías una base de datos como Redis o SQLite
 chat_histories = {}
+user_sessions = {}  # Nueva memoria para guardar datos específicos (nombre, mail, tel)
 
 SYSTEM_PROMPT = {
     "role": "system", 
     "content": (
         "Eres el Asistente Experto de Ducati Colombia. Tu tono es sofisticado, apasionado y muy útil.\n\n"
+
+        "OBJETIVO DE CONVERSIÓN:\n"
+        "Cuando un usuario muestre interés alto (pregunte por pruebas de manejo, disponibilidad o detalles técnicos profundos), "
+        "debes solicitar sus datos para agendar un Test Ride o enviarle un catálogo personalizado.\n\n"
+        
+        "REGLA DE CAPTURA DE DATOS:\n"
+        "1. Si no conoces su NOMBRE, pregúntalo amablemente.\n"
+        "2. Si ya tienes el nombre pero no el CONTACTO, solicita su correo electrónico y un número de teléfono.\n"
+        "3. Sé elegante: 'Para coordinar tu experiencia con la Panigale, ¿podrías compartirme tu nombre, correo y un número de contacto?'\n\n"
         
         "REGLA DE PRECIOS (CLAVE):\n"
         "1. NO des el precio de forma espontánea si el usuario no lo ha pedido.\n"
@@ -52,39 +66,69 @@ def index():
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.json
-    # Recibimos el user_id generado por el frontend (sessionId)
-    user_id = data.get("user_id", "default_user") 
+    user_id = data.get("user_id", "default_user")
     user_message = data.get("message")
 
-    # Si el ID no existe en memoria, inicializamos su historial con el prompt maestro
+    # Inicializar historial y datos de sesión si es nuevo
     if user_id not in chat_histories:
         chat_histories[user_id] = [SYSTEM_PROMPT]
+        user_sessions[user_id] = {"nombre": "Interesado Ducati", "email": None, "telefono": None}
 
-    # Añadir el mensaje actual del usuario al historial
     chat_histories[user_id].append({"role": "user", "content": user_message})
 
     try:
-        # Enviar todo el contexto acumulado de esta sesión a Groq
+        # --- EXTRACCIÓN Y ACTUALIZACIÓN DE MEMORIA ---
+        
+        # 1. Intentar capturar nombre (si no lo tenemos ya)
+        if user_sessions[user_id]["nombre"] == "Interesado Ducati":
+            nombre_match = re.search(r'(?:llam[oa]|soy|nombre\s+es|hablas\s+con)\s+([a-zA-ZáéíóúÁÉÍÓÚñÑ]+)', user_message, re.IGNORECASE)
+            if nombre_match:
+                user_sessions[user_id]["nombre"] = nombre_match.group(1).capitalize()
+            elif len(user_message.split()) == 1 and user_message[0].isupper():
+                user_sessions[user_id]["nombre"] = user_message.capitalize()
+
+        # 2. Capturar Email
+        email_match = re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', user_message)
+        if email_match:
+            user_sessions[user_id]["email"] = email_match.group()
+
+        # 3. Capturar Teléfono
+        phone_match = re.search(r'\+?\d{7,15}', user_message.replace(" ", ""))
+        if phone_match:
+            user_sessions[user_id]["telefono"] = phone_match.group()
+
+        # --- GUARDADO EN BASE DE DATOS ---
+        # Si tenemos al menos un dato de contacto nuevo, actualizamos la DB
+        if email_match or phone_match:
+            guardar_cliente(
+                user_sessions[user_id]["nombre"],
+                user_sessions[user_id]["email"] or "Sin correo",
+                user_sessions[user_id]["telefono"] or "Sin teléfono",
+                "Lead desde Chat"
+            )
+            print(f">>> [DB] Actualizado: {user_sessions[user_id]}")
+
+        # Llamada a Groq
         completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile", 
+            model="llama-3.3-70b-versatile",
             messages=chat_histories[user_id],
-            temperature=0.6, # Un poco más bajo para ser más preciso
-            max_tokens=500
+            temperature=0.6
         )
         
         bot_response = completion.choices[0].message.content
-
-        # Guardar la respuesta del bot para que la recuerde en la siguiente interacción
         chat_histories[user_id].append({"role": "assistant", "content": bot_response})
-
-        # Se limita la memoria a los últimos 10 mensajes para mantener velocidad y ahorrar tokens
-        if len(chat_histories[user_id]) > 12: 
-            chat_histories[user_id] = [SYSTEM_PROMPT] + chat_histories[user_id][-10:]
 
         return jsonify({"response": bot_response})
 
     except Exception as e:
-        print(f"Error en la API de Groq: {e}")
-        return jsonify({"response": "Lo siento, Cristian. Tenemos un problema técnico en el garaje central. Intenta de nuevo."}), 500
+        print(f"Error: {e}")
+        return jsonify({"response": "Error en el sistema."}), 500
+
+@app.route('/admin-ducati')
+def admin_panel():
+    # Obtenemos los datos de la DB
+    leads = obtener_leads()
+    return render_template('admin.html', leads=leads)
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -108,19 +108,19 @@ chatInput.addEventListener('keypress', (e) => {
 // Abrir chat
 openChatBtn.addEventListener('click', () => {
     chatWindow.style.display = 'flex';
-    // openChatBtn.style.display = 'none'; // Comenta o borra esta línea si quieres que el botón siga ahí
+
 });
 
 
 // Función para las sugerencias rápidas
 function sendQuickReply(text) {
-    // 1. Ponemos el texto en el input
+    //Poner el texto en el input
     chatInput.value = text;
     
-    // 2. Ejecutamos la función de enviar que ya tenemos
+    //Ejecutar la función de enviar
     sendMessage();
     
-    // 3. Opcional: Ocultar las sugerencias una vez se usen para limpiar el chat
+    //Ocultar las sugerencias una vez se usen para limpiar el chat
     const replies = document.getElementById('quick-replies');
     if (replies) {
         replies.style.opacity = '0';
@@ -141,10 +141,8 @@ function initResize(e) {
 
 /* Resizer */
 function Resize(e) {
-    // Calculamos basándonos en que el chat está anclado a la derecha (right: 25px)
-    // El nuevo ancho es la distancia desde el borde derecho de la pantalla hasta el mouse
+    
     const newWidth = window.innerWidth - e.clientX - 25; 
-    // La altura es la distancia desde el mouse hasta el borde inferior (menos el margen del botón)
     const newHeight = window.innerHeight - e.clientY - 85;
 
     // Límites mínimos y máximos para que no desaparezca la ventana

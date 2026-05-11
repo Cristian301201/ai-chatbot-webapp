@@ -1,9 +1,3 @@
-#Ignorar para subir a github
-Mision1/proyecto1/env.3.14.2
-Mision1/proyecto1/__pycache__
-Mision1/proyecto1/.pytest_cache
-Mision2/venv3.14.2
-Mision3/venv3.13.1
-Bot_OpenIA/env
-ProyectoIA/env3.14.2
-ProyectoIA/.env
+env3.14.2
+.env
+__pycache__
